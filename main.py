@@ -5,6 +5,8 @@ Modules:
   1. Fully automated apply  → generate cover letter + email → send
   2. Draft only             → generate cover letter + email → save (no send)
   3. Job search             → search internet → save to Excel
+  4. Batch apply from Excel → take the list from the Excel file and then apply each email
+  5. Recruiter match        → works as a professional recriter to find the match the jobs thats you fits well
 """
 
 import os
