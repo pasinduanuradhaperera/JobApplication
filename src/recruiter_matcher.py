@@ -128,7 +128,8 @@ def rank_jobs_for_cv(cv_text: str, jobs: list[dict], top_n: int = 25) -> list[di
         )
 
     prompt = f"""
-You are a top-tier recruiter. Rank these jobs for the candidate.
+        I will upload my resume. Act as an Al recruiter and Job hunting machine. Analyze my resume in depth to identify the most suitable fresher or entry-level roles or suitable level I should target in Sri Lanka.onsite,hybrid,online or whatever.even another country remote job it okay.. Find real companies currently hiring across startups, scale-ups, MNCs, consulting firms, and both tech and non-tech sectors, and provide verified application links for each opportunity.
+        Match every job with my profile and give a fit score out of 100. Create a prioritized job application list categorized into high-probability, medium-probability, and stretch roles. Curate a list of jobs with application links.
 
 Candidate CV:
 {cv_text[:7000]}
