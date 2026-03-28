@@ -34,8 +34,15 @@ def _extract_first_json(raw: str) -> str:
 def suggest_job_queries_from_cv(cv_text: str, max_queries: int = 5) -> list[str]:
     """Use AI to suggest role-based job search queries from CV content."""
     prompt = f"""
-You are a senior recruiter. Based on this CV, suggest the best job-search queries.
+You are an AI recruiter assistant for a job application automation project.
+Analyze the candidate CV and suggest practical job-search queries for early-career roles
+(fresher, entry-level, junior, or other suitable level based on the CV).
 
+Location preference:
+- Prioritize Sri Lanka opportunities (onsite or hybrid)
+- Also include remote opportunities (including international remote roles)
+
+Output should be search queries only (not companies, not links).
 CV:
 {cv_text[:6000]}
 
@@ -47,7 +54,8 @@ Return valid JSON only with this exact schema:
 Rules:
 - 3 to {max_queries} queries.
 - Keep each query concise (2 to 6 words).
-- Focus on realistic role titles and skill combinations.
+- Focus on realistic role titles + key skills from the CV.
+- Avoid duplicate or near-duplicate queries.
 """
     raw = _get_client().chat.completions.create(
         model=DEEPSEEK_MODEL,
@@ -128,8 +136,16 @@ def rank_jobs_for_cv(cv_text: str, jobs: list[dict], top_n: int = 25) -> list[di
         )
 
     prompt = f"""
-        I will upload my resume. Act as an Al recruiter and Job hunting machine. Analyze my resume in depth to identify the most suitable fresher or entry-level roles or suitable level I should target in Sri Lanka.onsite,hybrid,online or whatever.even another country remote job it okay.. Find real companies currently hiring across startups, scale-ups, MNCs, consulting firms, and both tech and non-tech sectors, and provide verified application links for each opportunity.
-        Match every job with my profile and give a fit score out of 100. Create a prioritized job application list categorized into high-probability, medium-probability, and stretch roles. Curate a list of jobs with application links.
+You are an AI recruiter assistant.
+Evaluate each provided job against the candidate CV and assign a fit score out of 100.
+
+Scoring guidance:
+- Strong weight: skills match, role alignment, seniority fit
+- Medium weight: location compatibility (Sri Lanka onsite/hybrid is good, remote/global remote is also acceptable)
+- Lower weight: generic keyword overlap without role fit
+
+Prefer practical early-career opportunities where the candidate has realistic alignment.
+Return a prioritized list using the provided job indexes.
 
 Candidate CV:
 {cv_text[:7000]}
@@ -150,6 +166,7 @@ Rules:
 - index is the 1-based number from the jobs list.
 - reason must be concise (max 18 words).
 - Prioritize skills fit, seniority fit, and role alignment.
+- Prefer jobs with clear role relevance over vague matches.
 """
 
     try:
